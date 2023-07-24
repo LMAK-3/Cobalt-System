@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <div class="container-sm border rounded mt-3 p-3 bg-success bg-gradient">
+    <header class="p-3 mb-3 border ">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <link rel="icon" href="{% static % '/img/Logo 3.png'}" type="image/x-icon">
+
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li><a href="#" class="nav-link px-2 link-secondary text-white">Usuarios</a>
+          </ul>
+
+          <div class="dropdown text-end">
+            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="https://github.com/mdo.png" alt="mdo" class="rounded-circle" width="32" height="32">
+            </a>
+            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}">Sign out</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+<div class="row">
+  <div class="col col-lg-1">
+      <a id="add" class="btn btn-primary"><i class="bi bi-plus-square"></i></a>
+  </div>
+  <div class="col col-lg-1">
+      <a id="edit" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
+  </div>
+    <div class="col col-lg-1">
+      <a id="delete" class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a>
+  </div>
+</div>
+
+<div class="container bg-warning rounded mt-3 mb-3 pb-3 pt-3" id='textd' style="display: none;">
+  <form method="post" >
+  <div class="row">
+     {% csrf_token %}
+    <div class="col">
+     {{forme.name}}
+    </div>
+    <div class="col">
+      {{forme.last_name}}
+    </div>
+    <div class="col">
+      {{forme.document}}
+    </div>
+    <div class="col">
+      {{forme.email}}
+    </div>
+    <div class="col">
+      {{forme.age}}
+    </div>
+    <div>
+    <div class="col position-relative pt-3">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-database-fill-add"></i></button>
+    </div>
+    </div>
+
+  </div>
+  </form>
+</div>
+
+    <table class="table table-dark mt-3 mb-3">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Apellido</th>
+         <th scope="col">Cédula</th>
+        <th scope="col">Correo</th>
+        <th scope="col">edad</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for person in add_user %}
+      <tr>
+        <th scope="row">
+          <div id="delete{{forloop.counter}}" style="display: none;">
+            <a href="{% url 'eliminar' person.id %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-x"></i></a>
+          </div>
+          <div id="edit{{forloop.counter}}" style="display: none;">
+            <a href="{% url 'editar' person.id %}" class="btn btn btn-outline-primary btn-sm"><i class="bi bi-x"></i></a>
+          </div>
+          <div id="counterd{{forloop.counter}}" style="display: block;">
+            {{forloop.counter}}
+          </div>
+      </th>
+          <td> {{person.name}}</td>
+          <td> {{person.last_name}}</td>
+          <td> {{person.document}}</td>
+          <td> {{person.email}}</td>
+          <td> {{person.age}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+{% else %}
+    <div class="alert alert-danger text-center" role="alert">
+      <p>You are not logged in</p>
+    <a class="btn btn-primary" href="{% url 'login' %}">Log In</a>
+</div>
+{% endif %}
+<script> 
+const del = document.getElementById("delete");
+del.addEventListener("click", Edit);
+function Edit(){
+  {% for person in add_user %}
+  const del{{forloop.counter}} = document.getElementById('delete{{forloop.counter}}');
+  if (del{{forloop.counter}}.style.display === "none") {
+      del{{forloop.counter}}.style.display = "block";
+      document.getElementById("counterd{{forloop.counter}}").style.display = "none";
+    } else {
+      del{{forloop.counter}}.style.display = "none";
+      document.getElementById("counterd{{forloop.counter}}").style.display = "block";
+
+
+    }
+    {% endfor %}
+}
+
+
+const edit = document.getElementById("edit");
+edit.addEventListener("click", Delet);
+function Delet(){
+  {% for person in add_user %}
+  const edit{{forloop.counter}} = document.getElementById('edit{{forloop.counter}}');
+  if (edit{{forloop.counter}}.style.display === "none") {
+      edit{{forloop.counter}}.style.display = "block";
+      document.getElementById("counterd{{forloop.counter}}").style.display = "none";
+    } else {
+      edit{{forloop.counter}}.style.display = "none";
+      document.getElementById("counterd{{forloop.counter}}").style.display = "block";
+
+
+    }
+    {% endfor %}
+}
+
+const element = document.getElementById("add");
+element.addEventListener("click", myFunction);
+
+function myFunction() {
+  const textd = document.getElementById("textd");
+  if (textd.style.display === "none") {
+      textd.style.display = "block";
+      element.innerHTML = '<i class="bi bi-dash"></i>';
+      element.className = "btn btn-danger";
+    } else {
+      textd.style.display = "none";
+      element.innerHTML = '<i class="bi bi-plus-square"></i>';
+      element.className = "btn btn-primary";
+
+    }
+}
+</script>
+{% endblock %}
